@@ -6,24 +6,28 @@ pipeline {
             steps {
                 echo "Compiling the Code.........."
                 bat "mvn compile"
+                git credentialsId: 'Github_Credential', url: 'https://github.com/akashp911/Maven_web_proj.git'
             }
         }
         stage('Testing') {
             steps {
                 echo "Testing the Code.........."
                 bat "mvn test"
+                git credentialsId: 'Github_Credential', url: 'https://github.com/akashp911/Maven_web_proj.git'
             }
         }
         stage('Packaging') {
             steps {
                 echo "Packaging the Code.........."
                 bat "mvn package" 
+                git credentialsId: 'Github_Credential', url: 'https://github.com/akashp911/Maven_web_proj.git'
             }
         }
-       stage('Install') {
+       stage('deploy') {
             steps {
-                echo "Installing the Code.........."
-                bat "mvn install" 
+                echo "deploy the Code.........."
+                bat "mvn deploy" 
+                deploy adapters: [tomcat9(credentialsId: 'Tomacat', path: '', url: 'http://localhost:80')], contextPath: 'SampleWebApp.war', war: '**/*.war'
             }
         }
     }
